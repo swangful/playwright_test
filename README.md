@@ -11,6 +11,7 @@ This project provides a Python test automation framework using:
 
 ## Project Structure
 
+- `spec/` - Pytest API contract tests (GitHub REST API used by the app)
 - `features/` - BDD feature files
 - `features/steps/` - Behave step definitions
 - `features/environment.py` - Behave hooks (browser lifecycle + Slack reporting)
@@ -33,6 +34,19 @@ playwright install --with-deps chromium
 
 ```bash
 behave
+```
+
+API tests (no browser):
+
+```bash
+pytest
+```
+
+Optional: higher rate limits with a token:
+
+```bash
+export GITHUB_TOKEN="ghp_..."
+pytest
 ```
 
 Run with environment overrides:

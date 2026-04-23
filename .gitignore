@@ -1,6 +1,7 @@
 .venv/
 __pycache__/
 .pycache/
+.pytest_cache/
 *.pyc
 playwright-report/
 reports/*.json

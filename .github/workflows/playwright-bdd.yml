@@ -25,6 +25,13 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run API tests (pytest)
+        env:
+          GITHUB_API_BASE: https://api.github.com
+        run: |
+          mkdir -p reports
+          pytest spec/ -v --junitxml=reports/pytest-junit.xml
+
       - name: Install Playwright Chromium
         run: |
           playwright install --with-deps chromium
