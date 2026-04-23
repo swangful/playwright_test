@@ -1,0 +1,4 @@
+playwright
+behave==1.2.6
+requests
+python-dotenv
