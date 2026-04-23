@@ -77,5 +77,4 @@ It installs dependencies, installs Playwright Chromium, runs Behave tests, uploa
 Implemented happy path:
 1. Search for `swangful`
 2. Open user details from search results
-3. Verify displayed repository count is `17`
-4. Cross-check API returns `17` repos
+3. Assert the UI public repository count matches GitHub `public_repos` for that user (stable as the account changes)

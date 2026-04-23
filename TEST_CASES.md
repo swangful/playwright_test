@@ -33,7 +33,6 @@
 - Automated now: **UI+API Happy Path**
   - Search for `swangful`
   - Open profile from search results
-  - Verify UI repository count is `17`
-  - Verify API `public_repos` count is `17`
+  - Verify UI repository count matches GitHub API `public_repos` for `swangful`
 
 - Its me! :D
