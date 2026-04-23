@@ -35,3 +35,5 @@
   - Open profile from search results
   - Verify UI repository count is `17`
   - Verify API `public_repos` count is `17`
+
+- Its me! :D
