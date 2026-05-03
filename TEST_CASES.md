@@ -30,9 +30,10 @@
 
 ## Initial Automated Scope Implemented
 
-- Automated now: **UI+API Happy Path**
+- Automated now: **UI+API Happy Path** (`features/user_search.feature` + Playwright BDD)
   - Search for `swangful`
   - Open profile from search results
   - Verify UI repository count matches GitHub API `public_repos` for `swangful`
+- API suite: **`tests/api/githubApi.spec.ts`** (Playwright `request`, same GitHub endpoints)
 
 - Its me! :D

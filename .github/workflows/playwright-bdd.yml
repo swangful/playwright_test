@@ -1,4 +1,4 @@
-name: Playwright Python BDD
+name: Playwright (BDD + API)
 
 on:
   push:
@@ -15,38 +15,31 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Set up Node
+        uses: actions/setup-node@v4
         with:
-          python-version: "3.11"
+          node-version: "20"
+          cache: "npm"
 
       - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+        run: npm install
 
-      - name: Run API tests (pytest)
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Run tests (bddgen + playwright)
         env:
+          BASE_URL: https://gh-users-search.netlify.app
           GITHUB_API_BASE: https://api.github.com
         run: |
           mkdir -p reports
-          pytest spec/ -v --junitxml=reports/pytest-junit.xml
-
-      - name: Install Playwright Chromium
-        run: |
-          playwright install --with-deps chromium
-
-      - name: Run Behave tests
-        env:
-          BASE_URL: https://gh-users-search.netlify.app
-          HEADLESS: "true"
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-        run: |
-          behave --junit --junit-directory reports
+          npm test
 
       - name: Upload reports
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: behave-reports
-          path: reports/
+          name: test-reports
+          path: |
+            reports/
+            playwright-report/

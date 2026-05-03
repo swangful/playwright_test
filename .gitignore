@@ -2,6 +2,9 @@
 __pycache__/
 .pycache/
 .pytest_cache/
+node_modules/
+.features-gen/
+test-results/
 *.pyc
 playwright-report/
 reports/*.json

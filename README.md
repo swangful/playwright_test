@@ -1,80 +1,62 @@
-# Playwright Python BDD Framework (POM + Slack + GitHub Actions)
+# Playwright BDD + API tests
 
 > Authored with Cursor AI assistance (Codex 5.3).
 
-This project provides a Python test automation framework using:
-- **Playwright** for browser automation
-- **Behave** (Cucumber for Python) for BDD
-- **Page Object Model (POM)** for maintainable UI abstractions
-- **Slack webhook reporting** for test notifications
-- **GitHub Actions** for CI execution
+End-to-end and API automation using the **Playwright test runner** with **[playwright-bdd](https://github.com/vitalets/playwright-bdd)** for Gherkin features (Cucumber-style steps without losing Playwright reporting, traces, sharding, and fixtures).
 
-## Project Structure
+## Layout
 
-- `spec/` - Pytest API contract tests (GitHub REST API used by the app)
-- `features/` - BDD feature files
-- `features/steps/` - Behave step definitions
-- `features/environment.py` - Behave hooks (browser lifecycle + Slack reporting)
-- `pages/` - Page objects
-- `utils/` - Helpers (config + Slack notifier)
-- `config/` - Runtime configuration
-- `reports/` - Generated test reports
-- `.github/workflows/` - CI workflow
+- `features/**/*.feature` — Gherkin scenarios
+- `features/steps/*.ts` — step definitions (`createBdd` + Playwright `test` fixtures)
+- `pages/*.ts` — page objects (TypeScript)
+- `tests/api/*.spec.ts` — REST contract tests (`@playwright/test` `request` fixture)
+- `playwright.config.ts` — two projects: **`chromium-bdd`** (generated from features) and **`api`**
 
 ## Setup
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-playwright install --with-deps chromium
+npm install
+npx playwright install --with-deps chromium
 ```
 
-## Run Tests
+After the first `npm install`, commit `package-lock.json` and you can switch CI to `npm ci` for reproducible installs.
+
+## Run
+
+All projects (BDD UI + API):
 
 ```bash
-behave
+npm test
 ```
 
-API tests (no browser):
+Only UI scenarios (after codegen):
 
 ```bash
-pytest
+npm run test:ui
 ```
 
-Optional: higher rate limits with a token:
+Only API tests:
 
 ```bash
-export GITHUB_TOKEN="ghp_..."
-pytest
+npm run test:api
 ```
 
-Run with environment overrides:
+Headed UI:
 
 ```bash
-BASE_URL="https://gh-users-search.netlify.app" HEADLESS="true" behave
+npx bddgen && npx playwright test --project=chromium-bdd --headed
 ```
 
-## Slack Integration
+Environment:
 
-Add a webhook URL (local shell):
-
-```bash
-export SLACK_WEBHOOK_URL="https://hooks.slack.com/services/XXX/YYY/ZZZ"
-```
-
-Or configure in GitHub Actions secret:
-- `SLACK_WEBHOOK_URL`
+- `BASE_URL` — app under test (default: `https://gh-users-search.netlify.app`)
+- `GITHUB_API_BASE` — GitHub REST root (default: `https://api.github.com`)
+- `GITHUB_TOKEN` — optional; raises rate limits for API tests and BDD API assertions
 
 ## GitHub Actions
 
-Workflow file: `.github/workflows/playwright-bdd.yml`
+Workflow: `.github/workflows/playwright-bdd.yml` runs `npm test` (includes `bddgen` before `playwright test`).
 
-It installs dependencies, installs Playwright Chromium, runs Behave tests, uploads reports, and posts summary to Slack.
+## Current BDD scenario
 
-## Initial Automated Scenario
-
-Implemented happy path:
-1. Search for `swangful`
-2. Open user details from search results
-3. Assert the UI public repository count matches GitHub `public_repos` for that user (stable as the account changes)
+Happy path for [gh-users-search.netlify.app](https://gh-users-search.netlify.app/): search `swangful`, assert UI public repo count matches live GitHub `public_repos`.
